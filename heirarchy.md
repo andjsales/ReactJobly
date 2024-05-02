@@ -30,7 +30,7 @@ App
 
             JobCard               (same as used in CompanyDetail)
 
-        LoginForm                Manages user login form data
+        login                Manages user login form data
             state=formData
             props=login()
 
