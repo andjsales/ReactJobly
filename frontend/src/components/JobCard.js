@@ -15,7 +15,7 @@ function JobCard({ id, title, salary, equity, companyName }) {
     console.debug("JobCard");
 
     const { hasAppliedToJob, applyToJob } = useContext(UserContext);
-    const [applied, setApplied] = useState();
+    const [applied, setApplied] = useState(hasAppliedToJob(id));
 
     React.useEffect(function updateAppliedStatus() {
         console.debug("JobCard useEffect updateAppliedStatus", "id=", id);
@@ -25,9 +25,13 @@ function JobCard({ id, title, salary, equity, companyName }) {
 
     /** Apply for a job */
     async function handleApply(evt) {
-        if (hasAppliedToJob(id)) return;
-        applyToJob(id);
-        setApplied(true);
+        try {
+            if (hasAppliedToJob(id)) return;
+            await applyToJob(id); // Ensure this function is async if it involves API calls
+            setApplied(true);
+        } catch (err) {
+            console.error("Job application error", err);
+        }
     }
 
     return (

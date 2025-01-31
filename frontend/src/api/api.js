@@ -31,14 +31,14 @@ class JoblyApi {
     return res.company;
   }
 
-  // MARK: getCompanies
+  // MARK: getCompanies()
   // Get all companies
   static async getCompanies() {
     let res = await this.request('companies');
     return res.companies;
   }
 
-  // MARK: login
+  // MARK: login()
   // Authenticates user, stores the token received for subsequent API requests
   static async login(username, password) {
     let res = await this.request('auth/token', { username, password }, 'post');
@@ -46,7 +46,7 @@ class JoblyApi {
     return res.token;
   }
 
-  // MARK: signup
+  // MARK: signup()
   // Registers a new user and stores the authentication token received
   static async signup(signupData) {
     let res = await this.request('auth/register', signupData, 'post');
@@ -54,12 +54,19 @@ class JoblyApi {
     return res.token;
   }
 
-  // MARK: getJobs
+  // MARK: getJobs()
   // Retrieves job listings, can apply filters like job title or salary range
   static async getJobs(filters = {}) {
     let res = await this.request('jobs', filters);
     return res.jobs;
   }
+
+  // MARK: getCurrentUser()
+  static async getCurrentUser(username) {
+    const res = await this.request(`users/${username}`);
+    return res.user;
+  }
+
 }
 
 // For now, put token ("testuser" / "password" on class)

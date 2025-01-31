@@ -65,16 +65,40 @@ function ensureAdmin(req, res, next) {
  *  If not, raises Unauthorized.
  */
 
+
+// Ensure the user is the correct user or an admin
 function ensureCorrectUserOrAdmin(req, res, next) {
   try {
     const user = res.locals.user;
-    if (!(user && (user.isAdmin || user.username === req.params.username))) {
-      throw new UnauthorizedError();
+    if (user && (user.username === req.params.username || user.isAdmin)) {
+      return next();
     }
-    return next();
+    throw new Error("Unauthorized");
   } catch (err) {
-    return next(err);
+    return res.status(401).json({ error: "Unauthorized" });
   }
+}
+
+// Function to add authorization headers in an API request
+function addAuthHeader(headers = {}) {
+  const token = localStorage.getItem("jobly-token"); // or use your method to retrieve the token
+  return {
+    ...headers,
+    Authorization: `Bearer ${token}`
+  };
+}
+
+// Example API request with axios
+async function getUserData() {
+  const headers = addAuthHeader();
+  const response = await axios.get("http://localhost:3001/users/arupine", { headers });
+  return response.data;
+}
+
+
+function logAuthHeader(req, res, next) {
+  console.log("Authorization Header:", req.headers.authorization);
+  next();
 }
 
 
@@ -83,4 +107,7 @@ module.exports = {
   ensureLoggedIn,
   ensureAdmin,
   ensureCorrectUserOrAdmin,
+  addAuthHeader,
+  getUserData,
+  logAuthHeader
 };

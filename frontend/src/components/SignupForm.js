@@ -32,11 +32,9 @@ function SignupForm({ signup }) {
         "formErrors=", formErrors,
     );
 
-    /** Handle form submit:
-     *
-     * Calls login func prop and, if successful, redirect to /companies.
-     */
 
+    // MARK: handleSubmit()
+    // Calls login func prop and, if successful, redirect to /companies
     async function handleSubmit(evt) {
         evt.preventDefault();
         let result = await signup(formData);
@@ -47,6 +45,8 @@ function SignupForm({ signup }) {
         }
     }
 
+
+    // MARK: handleChange()
     /** Update form data field */
     function handleChange(evt) {
         const { name, value } = evt.target;

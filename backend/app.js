@@ -5,7 +5,7 @@
 const express = require("express");
 const cors = require("cors");
 const { NotFoundError } = require("./expressError");
-const { authenticateJWT } = require("./middleware/auth");
+const { authenticateJWT } = require("./middleware/auth").authenticateJWT;
 
 const authRoutes = require("./routes/auth");
 const companiesRoutes = require("./routes/companies");
@@ -15,6 +15,13 @@ const jobsRoutes = require("./routes/jobs");
 const morgan = require("morgan");
 const app = express();
 
+function logAuthHeader(req, res, next) {
+  console.log("Authorization Header:", req.headers.authorization);
+  next();
+}
+
+app.use(logAuthHeader);
+
 app.get("/", (req, res) => {
   res.send("Hello, world!");
 });
@@ -23,7 +30,7 @@ app.get("/", (req, res) => {
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
-app.use(authenticateJWT);
+// app.use(authenticateJWT);
 
 app.use("/auth", authRoutes);
 app.use("/companies", companiesRoutes);
